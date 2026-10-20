@@ -1,0 +1,38 @@
+jenkins:
+  systemMessage: "Jenkins Production Lab (managed by JCasC)"
+  numExecutors: 0
+  securityRealm:
+    local:
+      allowsSignup: false
+      users:
+        - id: "${JENKINS_ADMIN_ID}"
+          password: "${JENKINS_ADMIN_PASSWORD}"
+  authorizationStrategy:
+    loggedInUsersCanDoAnything:
+      allowAnonymousRead: false
+  nodes:
+    - permanent:
+        name: "docker-agent-1"
+        remoteFS: "/home/jenkins/agent"
+        numExecutors: 2
+        labelString: "docker linux"
+        launcher:
+          ssh:
+            host: "jenkins-agent-1"
+            port: 22
+            credentialsId: "agent-ssh-key"
+            sshHostKeyVerificationStrategy: "nonVerifyingKeyVerificationStrategy"
+credentials:
+  system:
+    domainCredentials:
+      - credentials:
+          - basicSSHUserPrivateKey:
+              scope: SYSTEM
+              id: "agent-ssh-key"
+              username: "jenkins"
+              privateKeySource:
+                directEntry:
+                  privateKey: "${readFile:/run/agent_key}"
+unclassified:
+  location:
+    url: http://localhost:8080/

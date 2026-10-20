@@ -1,0 +1,6 @@
+.env
+*.tfstate*
+.terraform/
+*.pem
+jenkins_home/
+**/agents/keys/
